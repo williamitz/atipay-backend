@@ -15,13 +15,13 @@
 
 ## Description
 
-[AtiPay Backend server](https://github.com/williamitz/) ResfullApi repository.
+[AtiPay Backend server](https://github.com/williamitz/atipay-backend) ResfullApi repository.
 
 
 ## Clone project
 
 ```bash
-$ git clone git@github.com:williamitz/gramma_admin_backend.git
+$ git clone git@github.com:williamitz/atipay-backend.git
 ```
 
 ## Installation
