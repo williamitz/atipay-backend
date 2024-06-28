@@ -1,0 +1,15 @@
+export enum ECountyCodes {
+    PER = 'PE',
+    ECU = 'EC',
+    ARG = 'AR',
+    BRA = 'BR',
+    CHI = 'CL',
+    COL = 'CO',
+    MEX = 'MX',
+    PRI = 'PR',
+    PAR = 'PY',
+    USA = 'US',
+    VEN = 'VE',
+    URU = 'UY',
+    PAN = 'PA',
+};
