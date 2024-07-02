@@ -11,6 +11,7 @@ interface IEnvironments {
     TUPAY_SUCCESS_URL: string;
     TUPAY_NOTIFICATION_URL: string;
     TUPAY_API_KEY: string;
+    TUPAY_API_SIGNATURE: string;
 }
 
 const envSchema = joi.object({
@@ -23,6 +24,7 @@ const envSchema = joi.object({
     TUPAY_SUCCESS_URL: joi.string().required(),
     TUPAY_NOTIFICATION_URL: joi.string().required(),
     TUPAY_API_KEY: joi.string().required(),
+    TUPAY_API_SIGNATURE: joi.string().required(),
 })
 .unknown( true );
 
@@ -44,6 +46,7 @@ export const envs = {
     tupay_success_url: envVars.TUPAY_SUCCESS_URL,
     tupay_notification_url: envVars.TUPAY_NOTIFICATION_URL,
     tupay_api_key: envVars.TUPAY_API_KEY,
+    tupay_api_signature: envVars.TUPAY_API_SIGNATURE,
 };
 
 

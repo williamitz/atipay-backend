@@ -11,7 +11,7 @@ const onGetSignature = ( xDate: string, payload: any ): string => {
 
     const dataToHasing = xDate + envs.tupay_api_key + JSON.stringify( payload );
 
-    const hash = CryptoJS.HmacSHA256( dataToHasing, 'hxmmKtruyGdmHqPuzLoENvZRqJgQBPZjB' );
+    const hash = CryptoJS.HmacSHA256( dataToHasing, envs.tupay_api_signature );
     return "D24 " + hash;
     
 }
