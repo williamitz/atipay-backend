@@ -15,13 +15,15 @@ enum DepositStatus {
 
 model Deposit {
   id String @id @default(uuid())
+  code String @unique
 
-  apiDepositId Int    @unique
+  invoiceId Int    @unique
   amount       Float
   currency     String
 
   userId String
 
+  year Int
   status DepositStatus @default(PENDING)
   paid   Boolean       @default(false)
   paidAt DateTime?
@@ -30,7 +32,6 @@ model Deposit {
   updatedAt DateTime @updatedAt
 
   DepositRecepit         DepositRecepit?
-  DepositPaymentsMethods DepositPaymentsMethods[]
 }
 
 model DepositRecepit {
@@ -45,23 +46,4 @@ model DepositRecepit {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model DepositPaymentsMethods {
-  id String @id @default(uuid())
-
-  paymentMethodType String
-  paymentMethodCode String
-
-  reference         String?
-  beneficiaryName   String?
-  agreement         String?
-  paymentMethodName String?
-  payerName         String?
-  subType           String?
-  qrCode            String? @db.Text
-  redirectUrl       String? @db.Text
-
-  deposit Deposit? @relation(fields: [depositId], references: [id])
-  depositId String?
 }

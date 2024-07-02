@@ -28,7 +28,7 @@ const webHook = async ( req: Request, res: Response ) => {
                 paid: true,
                 paidAt: new Date(),
             },
-            where: { apiDepositId: deposit_id }
+            where: { invoiceId: deposit_id }
         });
 
         await prisma.$disconnect();
@@ -55,7 +55,7 @@ const findOneDeposit =  async( depositId: number ) => {
     try {
         
         const deposit = await prisma.deposit.findUnique({
-            where: { apiDepositId: depositId }
+            where: { invoiceId: depositId }
         });
         
         return deposit;

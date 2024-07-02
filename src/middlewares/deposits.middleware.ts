@@ -21,7 +21,11 @@ const verifyBody = [
         .isFloat({ min: 1 })
         .notEmpty(),
     
-    body('invoice_id')
+    // body('invoice_id')
+    //     .isString()
+    //     .notEmpty(),
+
+    body('user_id')
         .isString()
         .notEmpty(),
 

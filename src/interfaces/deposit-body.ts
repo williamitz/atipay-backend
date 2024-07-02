@@ -3,7 +3,7 @@ export interface IDepositBody {
     country:          string;
     currency:         string;
     amount:           string;
-    invoice_id:       string;
+    user_id:          string;
     payer:            IPayer;
 }
 

@@ -6,7 +6,11 @@ import moment from "moment"
  */
 const onGetXDate = (): string => moment().utc().format();
 
+const onCurrentYear = (): number => moment().year();
+const onCurrentYearIsoTwo = (): string => moment().format('yy');
 
 export {
-    onGetXDate
+    onGetXDate,
+    onCurrentYear,
+    onCurrentYearIsoTwo
 };

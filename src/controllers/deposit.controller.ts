@@ -3,7 +3,7 @@ import { EHttpStatus } from "../environments";
 import { IDepositBody, IDepositResponse } from "../interfaces";
 import axios, { AxiosError } from "axios";
 import { envs } from "../config";
-import { onGetSignature, onGetXDate } from "../helpers";
+import { onCurrentYear, onCurrentYearIsoTwo, onGetSignature, onGetXDate } from "../helpers";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -11,17 +11,22 @@ const prisma = new PrismaClient();
 const depositCreate = async ( req: Request, res: Response ) => {
     try {
 
-        const body = req.body as any as IDepositBody;
+        const requestBody = req.body as any as IDepositBody;
+        const { user_id, ...body } = requestBody;
 
-        const requestBody = {
+        const currentYear = onCurrentYear();
+        const invoiceId = await onGetCorrelative( currentYear );
+
+        const tuPayBody = {
             ...body,
             payment_method: "XA",
             success_url: envs.tupay_success_url,
-            notification_url: envs.tupay_notification_url
+            notification_url: envs.tupay_notification_url,
+            invoice_id: invoiceId
         };
 
         const xDate = onGetXDate();
-        const signature = onGetSignature( xDate, requestBody );
+        const signature = onGetSignature( xDate, tuPayBody );
         
         // console.log('headers ::: ', headers);
         
@@ -33,7 +38,7 @@ const depositCreate = async ( req: Request, res: Response ) => {
                 "X-Login": envs.tupay_api_key,
                 "Authorization": signature
             },
-            data: requestBody,
+            data: tuPayBody,
         });
 
         const depositResponse = response.data as IDepositResponse;
@@ -43,39 +48,29 @@ const depositCreate = async ( req: Request, res: Response ) => {
 
         const newDeposit = await prisma.deposit.create({
             data: {
+                code: merchant_invoice_id,
                 amount: payment_info.amount,
-                apiDepositId: deposit_id,
+                invoiceId: deposit_id,
                 currency: payment_info.currency,
-                userId: merchant_invoice_id,
+                year: currentYear,
+                userId: 'user-id',
                 DepositRecepit: {
                     create: {
                         checkoutUrl: redirect_url,
                         expiration_date: new Date(payment_info.expiration_date),
                         payment_method: payment_info.payment_method
                     }
-                },
-                DepositPaymentsMethods: {
-                    create: payment_info.multigateway_metadata.map( (e) => ({
-                        reference: e.reference,
-                        paymentMethodType: e.paymentMethodType,
-                        paymentMethodCode: e.paymentMethodCode,
-                        agreement: e.agreement,
-                        beneficiaryName: e.beneficiaryName,
-                        payerName: e.payerName,
-                        paymentMethodName: e.paymentMethodName,
-                        qrCode: e.qrCode,
-                        redirectUrl: e.redirectUrl,
-                        subType: e.subType
-                    }) )
                 }
-                
             }
         });
 
         await prisma.$disconnect();
 
         return res.status( EHttpStatus.CREATED )
-            .json( newDeposit );
+            .json( {
+                newDeposit,
+                redirect_url,
+            } );
 
     } catch (error: any ) {
 
@@ -90,6 +85,16 @@ const depositCreate = async ( req: Request, res: Response ) => {
         });
 
     }
+}
+
+const onGetCorrelative = async ( currentYear: number ): Promise<string> => {
+
+    // const currentYear = onCurrentYear();
+    const currentYearIsoTwo = onCurrentYearIsoTwo();
+    const counter = await prisma.deposit.count({ where: { year: currentYear } });
+    const preCode = `000000${ counter + 1 }`.slice(-7)
+
+    return `${ currentYearIsoTwo }-${ preCode }`;
 }
 
 export {
