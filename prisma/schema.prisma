@@ -3,12 +3,65 @@ generator client {
 }
 
 datasource db {
-  provider  = "mysql"
-  url       = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-model Deposits {
+enum DepositStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
 
-    id String @id @default(uuid())
-    
+model Deposit {
+  id String @id @default(uuid())
+
+  apiDepositId Int    @unique
+  amount       Float
+  currency     String
+
+  userId String
+
+  status DepositStatus @default(PENDING)
+  paid   Boolean       @default(false)
+  paidAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  DepositRecepit         DepositRecepit?
+  DepositPaymentsMethods DepositPaymentsMethods[]
+}
+
+model DepositRecepit {
+  id String @id @default(uuid())
+
+  payment_method  String
+  checkoutUrl     String @db.Text
+  expiration_date DateTime
+
+  deposit   Deposit @relation(fields: [depositId], references: [id])
+  depositId String  @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DepositPaymentsMethods {
+  id String @id @default(uuid())
+
+  paymentMethodType String
+  paymentMethodCode String
+
+  reference         String?
+  beneficiaryName   String?
+  agreement         String?
+  paymentMethodName String?
+  payerName         String?
+  subType           String?
+  qrCode            String? @db.Text
+  redirectUrl       String? @db.Text
+
+  deposit Deposit? @relation(fields: [depositId], references: [id])
+  depositId String?
 }

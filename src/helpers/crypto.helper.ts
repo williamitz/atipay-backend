@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { onGetXDate } from './moment.helper';
+import * as CryptoJS from 'crypto-js';
 import { envs } from '../config';
 
 /**
@@ -8,13 +8,15 @@ import { envs } from '../config';
  * @param payload jsonData
  * @returns hash
  */
-const onGetSignature = ( payload: any ): string => {
+const onGetSignature = ( xDate: string, payload: any ): string => {
 
-    const dataToHasing = onGetXDate() + envs.tupay_api_key + JSON.stringify( payload );
+    const dataToHasing = xDate + envs.tupay_api_key + JSON.stringify( payload );
     
-    const hash = crypto.createHmac('sha256', envs.tupay_api_key )
-                        .update( dataToHasing )
-                        .digest('hex');
+    // const hash = crypto.createHmac('sha256', 'hxmmKtruyGdmHqPuzLoENvZRqJgQBPZjB' )
+    //                     .update( dataToHasing )
+    //                     .digest('base64url');
+
+    const hash = CryptoJS.HmacSHA256( dataToHasing, 'hxmmKtruyGdmHqPuzLoENvZRqJgQBPZjB' );
     return "D24 " + hash;
     
 }
