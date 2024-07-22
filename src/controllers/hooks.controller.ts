@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 const webHook = async ( req: Request, res: Response ) => {
     try {
 
-        // console.log('Llamada a web hook req.body ::: ✅ ', req.body);
+        console.log('Llamada a web hook depósitos req.body ::: ✅ ', req.body);
         // { deposit_id: 301404615 } -> body
 
         const { deposit_id } = req.body as any as IBodyConfirm;
@@ -51,6 +51,32 @@ const webHook = async ( req: Request, res: Response ) => {
     }
 }
 
+const retreatWebHook = async ( req: Request, res: Response ) => {
+    try {
+
+        console.log('Llamada a retreat web hook req.body ::: ✅ ', req.body );
+        console.log('Llamada a retreat web hook req.query ::: ✅ ', req.query );
+        console.log('Llamada a retreat web hook req.params ::: ✅ ', req.params );
+
+        await prisma.$disconnect();
+
+        return res.status( EHttpStatus.OK )
+                .json({
+                    body: req.body
+                });
+        
+    } catch (error) {
+        
+        await prisma.$disconnect();
+
+        return res.status( EHttpStatus.BAD_REQUEST )
+            .json({
+                status: EHttpStatus.BAD_REQUEST,
+                message: 'Error to deposit web hook'
+            });
+    }
+}
+
 const findOneDeposit =  async( depositId: number ) => {
     try {
         
@@ -66,5 +92,6 @@ const findOneDeposit =  async( depositId: number ) => {
 }
 
 export {
-    webHook
+    webHook,
+    retreatWebHook
 };

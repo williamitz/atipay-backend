@@ -8,10 +8,16 @@ interface IEnvironments {
     DB_PORT: number;
     DB_NAME: string;
     STG_URL: string;
+
     TUPAY_SUCCESS_URL: string;
     TUPAY_NOTIFICATION_URL: string;
+
     TUPAY_API_KEY: string;
     TUPAY_API_SIGNATURE: string;
+
+    TUPAY_RETREATS_API_KEY: string;
+    TUPAY_RETREATS_API_SIGNATURE: string;
+    TUPAY_RETREATS_NOTIFICATION_URL: string;
 }
 
 const envSchema = joi.object({
@@ -25,6 +31,9 @@ const envSchema = joi.object({
     TUPAY_NOTIFICATION_URL: joi.string().required(),
     TUPAY_API_KEY: joi.string().required(),
     TUPAY_API_SIGNATURE: joi.string().required(),
+    TUPAY_RETREATS_API_KEY: joi.string().required(),
+    TUPAY_RETREATS_API_SIGNATURE: joi.string().required(),
+    TUPAY_RETREATS_NOTIFICATION_URL: joi.string().required(),
 })
 .unknown( true );
 
@@ -47,6 +56,9 @@ export const envs = {
     tupay_notification_url: envVars.TUPAY_NOTIFICATION_URL,
     tupay_api_key: envVars.TUPAY_API_KEY,
     tupay_api_signature: envVars.TUPAY_API_SIGNATURE,
+    tupay_retreats_api_key: envVars.TUPAY_RETREATS_API_KEY,
+    tupay_retreats_api_signature: envVars.TUPAY_RETREATS_API_SIGNATURE,
+    tupay_retreats_notification_url: envVars.TUPAY_RETREATS_NOTIFICATION_URL,
 };
 
 

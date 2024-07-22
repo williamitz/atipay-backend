@@ -16,6 +16,15 @@ const onGetSignature = ( xDate: string, payload: any ): string => {
     
 }
 
+const onGetSignatureRetreats = ( payload: any ): string => {
+
+    const hmac = CryptoJS.algo.HMAC.create( CryptoJS.algo.SHA256, envs.tupay_retreats_api_signature );
+
+    hmac.update( JSON.stringify( payload ) );
+    return  hmac.finalize().toString( CryptoJS.enc.Hex );
+}
+
 export {
-    onGetSignature
+    onGetSignature,
+    onGetSignatureRetreats
 };

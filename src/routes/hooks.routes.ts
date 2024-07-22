@@ -7,4 +7,6 @@ const hooksRouter = Router();
 
 hooksRouter.post( '/deposit-webhook', [], actions.webHook );
 
+hooksRouter.post( '/retreat-webhook', [], actions.retreatWebHook );
+
 export default hooksRouter;

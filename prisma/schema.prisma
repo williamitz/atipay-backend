@@ -13,6 +13,16 @@ enum DepositStatus {
   CANCELLED
 }
 
+enum RetreatStatus {
+  PENDING
+  PAID
+}
+
+enum AccountType {
+  S
+  C
+}
+
 model Deposit {
   id String @id @default(uuid())
   code String @unique
@@ -46,4 +56,34 @@ model DepositRecepit {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Retreat {
+
+  id String @id @default(uuid())
+  code String @unique
+
+  amount       Float
+  currency     String
+
+  bank_account String
+  account_type AccountType
+  beneficiary_name String
+
+  documentType String
+  documentId String
+
+  year Int
+
+  cashout_id String @unique
+
+  status RetreatStatus @default(PENDING)
+  paid   Boolean       @default(false)
+  paidAt DateTime?
+  
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
 }
